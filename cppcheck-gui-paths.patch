@@ -1,0 +1,11 @@
+--- cppcheck-1.49/gui/translationhandler.cpp.orig	2011-06-12 18:28:04.000000000 +0200
++++ cppcheck-1.49/gui/translationhandler.cpp	2011-06-17 11:33:12.852111676 +0200
+@@ -148,7 +148,7 @@
+ {
+     TranslationInfo info;
+     info.mName = name;
+-    info.mFilename = filename;
++    info.mFilename = QString("/usr/share/cppcheck-gui/") + filename;
+     info.mCode = QString(filename).right(2);
+     mTranslations.append(info);
+ }
