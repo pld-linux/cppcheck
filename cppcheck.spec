@@ -20,6 +20,7 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libxslt-progs
 BuildRequires:	pcre-devel
 BuildRequires:	rpmbuild(macros) >= 1.603
+BuildRequires:	sed >= 4.0
 BuildRequires:	tinyxml-devel
 %if %{with gui}
 BuildRequires:	QtGui-devel >= 4
@@ -57,6 +58,8 @@ Oparty na Qt4 graficzny interfejs użytkownika do cppcheck.
 %setup -q
 %patch0 -p1
 
+%{__sed} -i -e 's,-I[^ ]*/externals,,g' lib/lib.pri
+
 %build
 %{__make} all man \
 	CXX="%{__cxx}" \
@@ -84,7 +87,10 @@ lrelease-qt4 cppcheck_*.ts
 rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT
+	DESTDIR=$RPM_BUILD_ROOT \
+	TINYXML="%{_libdir}/libtinyxml.so" 
+
+install -Dp cppcheck.1 $RPM_BUILD_ROOT%{_mandir}/man1/cppcheck.1
 
 %if %{with gui}
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_datadir}/cppcheck-gui}
@@ -101,6 +107,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS Changelog readme.txt
 %attr(755,root,root) %{_bindir}/cppcheck
+%{_mandir}/man1/cppcheck.1*
 
 %if %{with gui}
 %files gui
