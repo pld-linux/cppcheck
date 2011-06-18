@@ -25,6 +25,7 @@ BuildRequires:	tinyxml-devel
 %if %{with gui}
 BuildRequires:	QtGui-devel >= 4
 BuildRequires:	QtHelp-devel >= 4
+BuildRequires:	qt4-build >= 4
 BuildRequires:	qt4-linguist >= 4
 BuildRequires:	qt4-qmake >= 4
 %endif
