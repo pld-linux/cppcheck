@@ -5,12 +5,12 @@
 Summary:	Tool for static C/C++ code analysis
 Summary(pl.UTF-8):	Narzędzie do statycznej analizy kodu w C/C++
 Name:		cppcheck
-Version:	1.50
+Version:	1.51
 Release:	1
 License:	GPL v3+
 Group:		Development/Tools
 Source0:	http://downloads.sourceforge.net/cppcheck/%{name}-%{version}.tar.bz2
-# Source0-md5:	79ef3898b246ba9c143155d5ad23dbd1
+# Source0-md5:	8349ab90472801b9d377cfabf846ca28
 Patch0:		%{name}-gui-paths.patch
 URL:		http://cppcheck.sourceforge.net/
 BuildRequires:	cmake
