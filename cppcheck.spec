@@ -5,13 +5,14 @@
 Summary:	Tool for static C/C++ code analysis
 Summary(pl.UTF-8):	Narzędzie do statycznej analizy kodu w C/C++
 Name:		cppcheck
-Version:	1.51
-Release:	2
+Version:	1.71
+Release:	1
 License:	GPL v3+
 Group:		Development/Tools
 Source0:	http://downloads.sourceforge.net/cppcheck/%{name}-%{version}.tar.bz2
-# Source0-md5:	8349ab90472801b9d377cfabf846ca28
+# Source0-md5:	e8400409101e60d81cc10418744f8b29
 Patch0:		%{name}-gui-paths.patch
+Patch1:		%{name}-translations.patch
 URL:		http://cppcheck.sourceforge.net/
 BuildRequires:	cmake
 BuildRequires:	docbook-style-xsl
@@ -58,73 +59,62 @@ Oparty na Qt4 graficzny interfejs użytkownika do cppcheck.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %{__sed} -i -e 's,-I[^ ]*/externals,,g' lib/lib.pri
 
 %build
-%{__make} all man \
-	CXX="%{__cxx}" \
-	CXXFLAGS="%{rpmcxxflags} -DNDEBUG -DHAVE_RULES -DTIXML_USE_STL -Wall" \
-	INCLUDE_FOR_CLI="-Ilib" \
-	INCLUDE_FOR_TEST="-Ilib -Icli" \
-	LDFLAGS="%{rpmldflags} -lpcre" \
-	TINYXML="%{_libdir}/libtinyxml.so" \
-	DB2MAN=%{_datadir}/sgml/docbook/xsl-stylesheets/manpages/docbook.xsl
+%{__make} DB2MAN=%{_datadir}/sgml/docbook/xsl-stylesheets/manpages/docbook.xsl man
 
-%if %{with gui}
-cd gui
-qmake-qt4 \
-	QMAKE_CXX="%{__cxx}" \
-	QMAKE_CXXFLAGS_RELEASE="%{rpmcxxflags}" \
-	QMAKE_LFLAGS_RELEASE="%{rpmldflags}"
+mkdir build
+cd build
+%{cmake} \
+	../ \
+	-DBUILD_SHARED_LIBS:BOOL=OFF \
+	-DBUILD_GUI:BOOL=%{?with_gui:ON}%{!?with_gui:OFF} \
+	-DHAVE_RULES:BOOL=ON
+
+
 %{__make}
-lrelease-qt4 cppcheck_*.ts
-# compiled version not used yet (code refers to manual.html at sf.net)
-#cd help
-#%{_libdir}/qt4/bin/qcollectiongenerator online-help.qhcp -o online-help.qhc
-%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
+cd build
 
 %{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT \
-	TINYXML="%{_libdir}/libtinyxml.so" 
-
-install -Dp cppcheck.1 $RPM_BUILD_ROOT%{_mandir}/man1/cppcheck.1
-
-%if %{with gui}
-install -d $RPM_BUILD_ROOT{%{_bindir},%{_datadir}/cppcheck-gui}
-install gui/cppcheck-gui $RPM_BUILD_ROOT%{_bindir}
-install -p gui/cppcheck_*.qm $RPM_BUILD_ROOT%{_datadir}/cppcheck-gui
-%{__make} -C gui install \
 	DESTDIR=$RPM_BUILD_ROOT
-%endif
+
+install -Dp ../cppcheck.1 $RPM_BUILD_ROOT%{_mandir}/man1/cppcheck.1
+
+%{__rm} -r $RPM_BUILD_ROOT%{_includedir}/CppCheck
+%{__rm} -r $RPM_BUILD_ROOT/usr/lib/lib*.a
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS Changelog readme.txt
+%doc AUTHORS readme.txt
 %attr(755,root,root) %{_bindir}/cppcheck
 %{_mandir}/man1/cppcheck.1*
 
 %if %{with gui}
 %files gui
 %defattr(644,root,root,755)
-%doc readme_gui.txt
 %attr(755,root,root) %{_bindir}/cppcheck-gui
-%dir %{_datadir}/cppcheck-gui
-%lang(de) %{_datadir}/cppcheck-gui/cppcheck_de.qm
-%{_datadir}/cppcheck-gui/cppcheck_en.qm
-%lang(es) %{_datadir}/cppcheck-gui/cppcheck_es.qm
-%lang(fi) %{_datadir}/cppcheck-gui/cppcheck_fi.qm
-%lang(fr) %{_datadir}/cppcheck-gui/cppcheck_fr.qm
-%lang(ja) %{_datadir}/cppcheck-gui/cppcheck_ja.qm
-%lang(nl) %{_datadir}/cppcheck-gui/cppcheck_nl.qm
-%lang(pl) %{_datadir}/cppcheck-gui/cppcheck_pl.qm
-%lang(ru) %{_datadir}/cppcheck-gui/cppcheck_ru.qm
-%lang(sr) %{_datadir}/cppcheck-gui/cppcheck_sr.qm
-%lang(sv) %{_datadir}/cppcheck-gui/cppcheck_sv.qm
+%dir %{_datadir}/CppCheck
+%{_datadir}/CppCheck/*.cfg
+%dir %{_datadir}/CppCheck/lang
+%lang(de) %{_datadir}/CppCheck/lang/cppcheck_de.qm
+%lang(es) %{_datadir}/CppCheck/lang/cppcheck_es.qm
+%lang(fi) %{_datadir}/CppCheck/lang/cppcheck_fi.qm
+%lang(fr) %{_datadir}/CppCheck/lang/cppcheck_fr.qm
+%lang(it) %{_datadir}/CppCheck/lang/cppcheck_it.qm
+%lang(ja) %{_datadir}/CppCheck/lang/cppcheck_ja.qm
+%lang(ko) %{_datadir}/CppCheck/lang/cppcheck_ko.qm
+%lang(nl) %{_datadir}/CppCheck/lang/cppcheck_nl.qm
+%lang(ru) %{_datadir}/CppCheck/lang/cppcheck_ru.qm
+%lang(sr) %{_datadir}/CppCheck/lang/cppcheck_sr.qm
+%lang(sv) %{_datadir}/CppCheck/lang/cppcheck_sv.qm
+%lang(zh_CN) %{_datadir}/CppCheck/lang/cppcheck_zh_CN.qm
 %endif

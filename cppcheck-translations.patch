@@ -1,0 +1,32 @@
+diff -up cppcheck-1.70/gui/CMakeLists.txt.translations cppcheck-1.70/gui/CMakeLists.txt
+--- cppcheck-1.70/gui/CMakeLists.txt.translations	2015-11-05 11:37:19.343945331 -0800
++++ cppcheck-1.70/gui/CMakeLists.txt	2015-11-05 11:37:19.344945349 -0800
+@@ -26,7 +26,7 @@ if (BUILD_GUI)
+     add_executable(cppcheck-gui ${hdrs} ${srcs} ${uis_hdrs} ${resources} ${qms})
+ 
+     install(TARGETS cppcheck-gui RUNTIME DESTINATION bin COMPONENT applications)
+-    install(FILES ${qms} DESTINATION bin COMPONENT applications)
++    install(FILES ${qms} DESTINATION share/${PROJECT_NAME}/lang/ COMPONENT applications)
+ 
+     set(CMAKE_AUTOMOC OFF)
+ 
+diff -up cppcheck-1.70/gui/translationhandler.cpp.translations cppcheck-1.70/gui/translationhandler.cpp
+--- cppcheck-1.70/gui/translationhandler.cpp.translations	2015-09-04 11:04:31.000000000 -0700
++++ cppcheck-1.70/gui/translationhandler.cpp	2015-11-05 11:38:34.991299374 -0800
+@@ -106,15 +106,7 @@ bool TranslationHandler::SetLanguage(con
+     if (datadir.isEmpty())
+         datadir = appPath;
+ 
+-    QString translationFile;
+-    if (QFile::exists(datadir + "/lang/" + mTranslations[index].mFilename + ".qm"))
+-        translationFile = datadir + "/lang/" + mTranslations[index].mFilename + ".qm";
+-
+-    else if (QFile::exists(datadir + "/" + mTranslations[index].mFilename + ".qm"))
+-        translationFile = datadir + "/" + mTranslations[index].mFilename + ".qm";
+-
+-    else
+-        translationFile = appPath + "/" + mTranslations[index].mFilename + ".qm";
++    QString translationFile("/usr/share/CppCheck/lang/" + mTranslations[index].mFilename + ".qm");
+ 
+     if (!mTranslator->load(translationFile) && !failure) {
+         translationFile += ".qm";

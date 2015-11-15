@@ -6,6 +6,6 @@
      info.mName = name;
 -    info.mFilename = filename;
 +    info.mFilename = QString("/usr/share/cppcheck-gui/") + filename;
-     info.mCode = QString(filename).right(2);
+     int codeLength = QString(filename).length() - QString(filename).indexOf('_') - 1;
+     info.mCode = QString(filename).right(codeLength);
      mTranslations.append(info);
- }
