@@ -14,7 +14,7 @@ Source0:	http://downloads.sourceforge.net/cppcheck/%{name}-%{version}.tar.bz2
 Patch0:		%{name}-gui-paths.patch
 Patch1:		%{name}-translations.patch
 URL:		http://cppcheck.sourceforge.net/
-BuildRequires:	cmake
+BuildRequires:	cmake >= 2.8
 BuildRequires:	docbook-style-xsl
 BuildRequires:	docbook-dtd45-xml
 BuildRequires:	libstdc++-devel
