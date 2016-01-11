@@ -5,12 +5,12 @@
 Summary:	Tool for static C/C++ code analysis
 Summary(pl.UTF-8):	Narzędzie do statycznej analizy kodu w C/C++
 Name:		cppcheck
-Version:	1.71
+Version:	1.72
 Release:	1
 License:	GPL v3+
 Group:		Development/Tools
 Source0:	http://downloads.sourceforge.net/cppcheck/%{name}-%{version}.tar.bz2
-# Source0-md5:	e8400409101e60d81cc10418744f8b29
+# Source0-md5:	2bd36f91ae0191ef5273bb7f6dc0d72e
 Patch0:		%{name}-gui-paths.patch
 Patch1:		%{name}-translations.patch
 URL:		http://cppcheck.sourceforge.net/
@@ -85,9 +85,6 @@ cd build
 	DESTDIR=$RPM_BUILD_ROOT
 
 install -Dp ../cppcheck.1 $RPM_BUILD_ROOT%{_mandir}/man1/cppcheck.1
-
-%{__rm} -r $RPM_BUILD_ROOT%{_includedir}/CppCheck
-%{__rm} -r $RPM_BUILD_ROOT/usr/lib/lib*.a
 
 %clean
 rm -rf $RPM_BUILD_ROOT
