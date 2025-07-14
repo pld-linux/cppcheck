@@ -58,8 +58,8 @@ Oparty na Qt4 graficzny interfejs użytkownika do cppcheck.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
+%patch -P0 -p1
+%patch -P1 -p1
 
 %{__sed} -i -e 's,-I[^ ]*/externals,,g' lib/lib.pri
 
