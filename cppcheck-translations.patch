@@ -1,31 +1,30 @@
 --- cppcheck-1.72/gui/CMakeLists.txt.orig	2016-01-11 15:46:49.455670218 +0100
 +++ cppcheck-1.72/gui/CMakeLists.txt	2016-01-11 15:50:01.915662141 +0100
 @@ -29,7 +29,7 @@
- 
+     endif()
  
      install(TARGETS cppcheck-gui RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR} COMPONENT applications)
 -    install(FILES ${qms} DESTINATION ${CMAKE_INSTALL_FULL_BINDIR} COMPONENT applications)
 +    install(FILES ${qms} DESTINATION share/${PROJECT_NAME}/lang/ COMPONENT applications)
  
-     set(CMAKE_AUTOMOC OFF)
+     install(FILES cppcheck-gui.desktop DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications)
  
-diff -up cppcheck-1.70/gui/translationhandler.cpp.translations cppcheck-1.70/gui/translationhandler.cpp
---- cppcheck-1.70/gui/translationhandler.cpp.translations	2015-09-04 11:04:31.000000000 -0700
-+++ cppcheck-1.70/gui/translationhandler.cpp	2015-11-05 11:38:34.991299374 -0800
-@@ -106,15 +106,7 @@ bool TranslationHandler::SetLanguage(con
-     if (datadir.isEmpty())
-         datadir = appPath;
+--- cppcheck-2.20.0/gui/translationhandler.cpp.orig	2026-03-02 16:22:31.000000000 +0100
++++ cppcheck-2.20.0/gui/translationhandler.cpp	2026-05-17 12:36:45.903353628 +0200
+@@ -100,15 +100,7 @@
  
--    QString translationFile;
--    if (QFile::exists(datadir + "/lang/" + mTranslations[index].mFilename + ".qm"))
--        translationFile = datadir + "/lang/" + mTranslations[index].mFilename + ".qm";
+         QString datadir = getDataDir();
+ 
+-        QString translationFile;
+-        if (QFile::exists(datadir + "/lang/" + mTranslations[index].mFilename + ".qm"))
+-            translationFile = datadir + "/lang/" + mTranslations[index].mFilename + ".qm";
 -
--    else if (QFile::exists(datadir + "/" + mTranslations[index].mFilename + ".qm"))
--        translationFile = datadir + "/" + mTranslations[index].mFilename + ".qm";
+-        else if (QFile::exists(datadir + "/" + mTranslations[index].mFilename + ".qm"))
+-            translationFile = datadir + "/" + mTranslations[index].mFilename + ".qm";
 -
--    else
--        translationFile = appPath + "/" + mTranslations[index].mFilename + ".qm";
-+    QString translationFile("/usr/share/CppCheck/lang/" + mTranslations[index].mFilename + ".qm");
+-        else
+-            translationFile = appPath + "/" + mTranslations[index].mFilename + ".qm";
++        QString translationFile("/usr/share/CppCheck/lang/" + mTranslations[index].mFilename + ".qm");
  
-     if (!mTranslator->load(translationFile) && !failure) {
-         translationFile += ".qm";
+         if (!mTranslator->load(translationFile)) {
+             failure = true;
