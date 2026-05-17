@@ -12,7 +12,7 @@ Group:		Development/Tools
 Source0:	https://downloads.sourceforge.net/cppcheck/%{name}-%{version}.tar.bz2
 # Source0-md5:	052140ea9d97107644440ec669a646b7
 Patch0:		%{name}-translations.patch
-URL:		http://cppcheck.sourceforge.io/
+URL:		https://cppcheck.sourceforge.io/
 BuildRequires:	boost-devel
 BuildRequires:	cmake >= 3.22
 BuildRequires:	docbook-style-xsl
@@ -23,19 +23,19 @@ BuildRequires:	pcre-devel
 BuildRequires:	python3 >= 1:3.7
 BuildRequires:	python3-modules >= 1:3.7
 BuildRequires:	rpm-build >= 4.6
-BuildRequires:	rpmbuild(macros) >= 1.605
+BuildRequires:	rpmbuild(macros) >= 2.047
 BuildRequires:	sed >= 4.0
 BuildRequires:	tinyxml2-devel
 %if %{with gui}
-BuildRequires:	Qt6Charts-devel
-BuildRequires:	Qt6Core-devel
-BuildRequires:	Qt6Gui-devel
-BuildRequires:	Qt6Help-devel
-BuildRequires:	Qt6Network-devel
-BuildRequires:	Qt6PrintSupport-devel
-BuildRequires:	Qt6Widgets-devel
-BuildRequires:	qt6-build
-BuildRequires:	qt6-linguist
+BuildRequires:	Qt6Charts-devel >= 6.0.0
+BuildRequires:	Qt6Core-devel >= 6.0.0
+BuildRequires:	Qt6Gui-devel >= 6.0.0
+BuildRequires:	Qt6Help-devel >= 6.0.0
+BuildRequires:	Qt6Network-devel >= 6.0.0
+BuildRequires:	Qt6PrintSupport-devel >= 6.0.0
+BuildRequires:	Qt6Widgets-devel >= 6.0.0
+BuildRequires:	qt6-build >= 6.0.0
+BuildRequires:	qt6-linguist >= 6.0.0
 %endif
 Requires:	%{name}-common = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -88,13 +88,14 @@ Oparty na Qt6 graficzny interfejs użytkownika do cppcheck.
 %build
 %{__make} DB2MAN=%{_datadir}/sgml/docbook/xsl-stylesheets/manpages/docbook.xsl man
 
-%{cmake} -B build \
+%cmake -B build \
 	-DBUILD_SHARED_LIBS:BOOL=OFF \
-	-DBUILD_GUI:BOOL=%{?with_gui:ON}%{!?with_gui:OFF} \
-	-DWITH_QCHART:BOOL=%{?with_gui:ON}%{!?with_gui:OFF} \
+	-DBUILD_GUI:BOOL=%{__ON_OFF gui} \
+	-DWITH_QCHART:BOOL=%{__ON_OFF gui} \
 	-DHAVE_RULES:BOOL=ON \
 	-DUSE_BOOST:BOOL=ON \
 	-DUSE_BUNDLED_TINYXML2:BOOL=OFF \
+	-Dtinyxml2_SHARED_LIBS:BOOL=ON
 
 %{__make} -C build
 
